@@ -1,0 +1,13 @@
+// go to container
+winpty docker exec -it symfony-test_nginx_1 bash
+
+// docker-compose
+docker-compose build
+docker-compose up -d
+
+// delete all images
+docker rmi $(docker images -a -q)
+
+// stop & delete all container
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)

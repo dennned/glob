@@ -1,0 +1,61 @@
+version: '3.7'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/Nginx.Dockerfile
+    ports:
+      - 8098:80
+    container_name: nginx
+    restart: on-failure
+    volumes:
+      -  ./:/var/www/golb
+    networks:
+      - mynetwork
+  phpfpm:
+    build:
+      context: .
+      dockerfile: docker/Fpm.Dockerfile
+    ports:
+      - 9002:9000
+    volumes:
+      -  ./:/var/www/golb
+    container_name: phpfpm
+    networks:
+      - mynetwork
+  dbmysql:
+    image: mysql:8.0
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-authentication-plugin=mysql_native_password']
+    restart: on-failure
+    ports:
+      - 33061:3306
+    container_name: dbmysql
+    networks:
+      - mynetwork
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: golb
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - data_mysql:/var/lib/mysql
+      - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+  phpmyadmin:
+    depends_on:
+      - dbmysql
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    networks:
+      - mynetwork
+    ports:
+      - 8082:80
+    environment:
+      PMA_HOST: dbmysql
+      MYSQL_ROOT_PASSWORD: root
+      PMA_ARBITRARY: 1
+    volumes:
+      - /sessions
+networks:
+  mynetwork:
+volumes:
+  data_mysql:
