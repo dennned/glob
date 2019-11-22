@@ -60,6 +60,10 @@ class PostType extends AbstractType
                 'label' => 'label.published_at',
                 'help' => 'help.post_publication',
             ])
+            ->add('category', null, [
+                'label' => 'label.category',
+                'required' => true,
+            ])
             ->add('tags', TagsInputType::class, [
                 'label' => 'label.tags',
                 'required' => false,

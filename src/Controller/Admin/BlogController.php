@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace App\Controller\Admin;
 
 use App\Entity\Post;
@@ -53,6 +44,10 @@ class BlogController extends AbstractController
      *
      * @Route("/", methods={"GET"}, name="admin_index")
      * @Route("/", methods={"GET"}, name="admin_post_index")
+     *
+     * @param PostRepository $posts
+     * @return Response
+     *
      */
     public function index(PostRepository $posts): Response
     {
@@ -69,6 +64,9 @@ class BlogController extends AbstractController
      * NOTE: the Method annotation is optional, but it's a recommended practice
      * to constraint the HTTP methods each controller responds to (by default
      * it responds to all methods).
+     *
+     * @param Request $request
+     * @return Response
      */
     public function new(Request $request): Response
     {
@@ -115,6 +113,9 @@ class BlogController extends AbstractController
      * Finds and displays a Post entity.
      *
      * @Route("/{id<\d+>}", methods={"GET"}, name="admin_post_show")
+     *
+     * @param Post $post
+     * @return Response
      */
     public function show(Post $post): Response
     {
@@ -132,6 +133,10 @@ class BlogController extends AbstractController
      *
      * @Route("/{id<\d+>}/edit",methods={"GET", "POST"}, name="admin_post_edit")
      * @IsGranted("edit", subject="post", message="Posts can only be edited by their authors.")
+     *
+     * @param Request $request
+     * @param Post $post
+     * @return Response
      */
     public function edit(Request $request, Post $post): Response
     {
@@ -158,6 +163,10 @@ class BlogController extends AbstractController
      *
      * @Route("/{id}/delete", methods={"POST"}, name="admin_post_delete")
      * @IsGranted("delete", subject="post")
+     *
+     * @param Request $request
+     * @param Post $post
+     * @return Response
      */
     public function delete(Request $request, Post $post): Response
     {

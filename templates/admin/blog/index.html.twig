@@ -48,8 +48,9 @@
             <i class="fa fa-plus" aria-hidden="true"></i> {{ 'action.create_post'|trans }}
         </a>
     </div>
-
-    {{ parent() }}
-
-    {{ show_source_code(_self) }}
+    <div class="section actions">
+        <a href="{{ path('admin_category_index') }}" class="btn btn-lg btn-block btn-success">
+            <i class="fa fa-plus" aria-hidden="true"></i> {{ 'action.create_category'|trans }}
+        </a>
+    </div>
 {% endblock %}

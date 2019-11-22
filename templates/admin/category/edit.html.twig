@@ -1,0 +1,27 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body_id 'admin_category_edit' %}
+
+{% block main %}
+    <h1>{{ 'title.edit_post'|trans({'%id%': category.id}) }}</h1>
+
+    {{ form_start(form, {attr: attr|default({})}) }}
+    {{ form_widget(form) }}
+
+    <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
+        <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('label.create_post'|trans) }}
+    </button>
+
+    <a href="{{ path('admin_category_index') }}" class="btn btn-link">
+        <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.back_to_list'|trans }}
+    </a>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block sidebar %}
+    <div class="section actions">
+        {{ include('admin/category/_delete_form.html.twig', {category: category}, with_context = false) }}
+    </div>
+
+{% endblock %}
