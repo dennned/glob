@@ -148,15 +148,32 @@ class BlogController extends AbstractController
      *
      * @param Request $request
      * @param Post $post
+     * @param FileUploader $fileUploader
      * @return Response
+     * @throws \Exception
      */
-    public function edit(Request $request, Post $post): Response
+    public function edit(Request $request, Post $post, FileUploader $fileUploader): Response
     {
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post->setSlug(Slugger::slugify($post->getTitle()));
+
+            /** @var UploadedFile $image */
+            $image = $form['image']->getData();
+
+            if($image){
+                //upload image
+                $newFilename = $fileUploader->upload($image);
+                // delete old image
+                if(null !== $post->getImageName()){
+                    $fileUploader->delete($post->getImageName());
+                }
+                $post->setImageName($newFilename);
+            }
+
+
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', 'post.updated_successfully');
@@ -178,9 +195,10 @@ class BlogController extends AbstractController
      *
      * @param Request $request
      * @param Post $post
+     * @param FileUploader $fileUploader
      * @return Response
      */
-    public function delete(Request $request, Post $post): Response
+    public function delete(Request $request, Post $post, FileUploader $fileUploader): Response
     {
         if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
             return $this->redirectToRoute('admin_post_index');
@@ -190,6 +208,11 @@ class BlogController extends AbstractController
         // by Doctrine, except for SQLite (the database used in this application)
         // because foreign key support is not enabled by default in SQLite
         $post->getTags()->clear();
+
+        // delete image
+        if(null !== $post->getImageName()){
+            $fileUploader->delete($post->getImageName());
+        }
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($post);

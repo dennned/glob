@@ -54,7 +54,7 @@ class PostType extends AbstractType
                 'label' => 'label.summary',
             ])
             ->add('content', null, [
-                'attr' => ['rows' => 20],
+                'attr' => ['rows' => 10],
                 'help' => 'help.post_content',
                 'label' => 'label.content',
             ])

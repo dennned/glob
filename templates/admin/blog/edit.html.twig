@@ -5,11 +5,30 @@
 {% block main %}
     <h1>{{ 'title.edit_post'|trans({'%id%': post.id}) }}</h1>
 
-    {{ include('admin/blog/_form.html.twig', {
-        form: form,
-        button_label: 'action.save'|trans,
-        include_back_to_home_link: true,
-    }, with_context = false) }}
+    {{ form_start(form) }}
+        {{ form_row(form.title) }}
+        {{ form_row(form.summary) }}
+        {{ form_row(form.content) }}
+        {{ form_row(form.publishedAt) }}
+        {{ form_row(form.category) }}
+        {{ form_row(form.tags) }}
+
+        {% if post.imageName %}
+            <div class="form-group size-image">
+                <img src="{{asset('/uploads/images/' ~ post.imageName) | imagine_filter('post_show')}}" title="{{ post.title }}" alt="{{ post.title }}" />
+            </div>
+        {% endif %}
+
+        {{ form_row(form.image) }}
+
+        <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
+            <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('label.create_post'|trans) }}
+        </button>
+
+        <a href="{{ path('admin_post_index') }}" class="btn btn-link">
+            <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.back_to_list'|trans }}
+        </a>
+    {{ form_end(form) }}
 {% endblock %}
 
 {% block sidebar %}
