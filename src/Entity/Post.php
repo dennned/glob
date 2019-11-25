@@ -119,6 +119,11 @@ class Post
      */
     private $category;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageName;
+
     public function __construct()
     {
         $this->publishedAt = new \DateTime();
@@ -238,5 +243,15 @@ class Post
         $this->category = $category;
 
         return $this;
+    }
+
+    public function getImageName()
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName($imageName)
+    {
+        $this->imageName = $imageName;
     }
 }

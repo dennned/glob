@@ -6,10 +6,12 @@ use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
 use App\Security\PostVoter;
+use App\Service\FileUploader;
 use App\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -66,9 +68,11 @@ class BlogController extends AbstractController
      * it responds to all methods).
      *
      * @param Request $request
+     * @param FileUploader $fileUploader
      * @return Response
+     * @throws \Exception
      */
-    public function new(Request $request): Response
+    public function new(Request $request, FileUploader $fileUploader): Response
     {
         $post = new Post();
         $post->setAuthor($this->getUser());
@@ -85,6 +89,14 @@ class BlogController extends AbstractController
         // See https://symfony.com/doc/current/best_practices/forms.html#handling-form-submits
         if ($form->isSubmitted() && $form->isValid()) {
             $post->setSlug(Slugger::slugify($post->getTitle()));
+
+            /** @var UploadedFile $image */
+            $image = $form['image']->getData();
+
+            if($image){
+                $newFilename = $fileUploader->upload($image);
+                $post->setImageName($newFilename);
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($post);

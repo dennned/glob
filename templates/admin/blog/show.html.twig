@@ -10,6 +10,12 @@
         <span class="metadata"><i class="fa fa-user"></i> {{ post.author.fullName }}</span>
     </p>
 
+    {% if post.imageName %}
+        <div class="form-group size-image">
+            <img src="{{asset('/uploads/images/' ~ post.imageName) | imagine_filter('post_show')}}" title="{{ post.title }}" alt="{{ post.title }}" />
+        </div>
+    {% endif %}
+
     <div class="well">
         <p class="m-b-0"><strong>{{ 'label.summary'|trans }}</strong>: {{ post.summary }}</p>
     </div>

@@ -15,9 +15,11 @@ use App\Entity\Post;
 use App\Form\Type\DateTimePickerType;
 use App\Form\Type\TagsInputType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 /**
  * Defines the form used to create and manipulate blog posts.
@@ -67,6 +69,20 @@ class PostType extends AbstractType
             ->add('tags', TagsInputType::class, [
                 'label' => 'label.tags',
                 'required' => false,
+            ])
+            ->add('image', FileType::class, [
+                'label' => 'label.upload.image',
+                'mapped' => false,
+                'required' => true,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1500k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                        ],
+                        'mimeTypesMessage' => 'post.format_image',
+                    ])
+                ],
             ])
         ;
     }

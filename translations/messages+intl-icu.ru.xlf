@@ -145,6 +145,10 @@
                 <source>label.cancel</source>
                 <target>Отменить</target>
             </trans-unit>
+            <trans-unit id="label.upload.image">
+                <source>label.upload.image</source>
+                <target>Картинка</target>
+            </trans-unit>
             <trans-unit id="action.back">
                 <source>action.back</source>
                 <target>Назад</target>

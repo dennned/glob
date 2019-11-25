@@ -5,6 +5,7 @@ parameters:
     # This parameter defines the codes of the locales (languages) enabled in the application
     app_locales: ru
     app.notifications.email_sender: anonymous@example.com
+    image_directory: '%kernel.project_dir%/public/uploads/images'
 
 services:
     # default configuration for services in *this* file
@@ -32,3 +33,8 @@ services:
     # 'arguments' key and define the arguments just below the service class
     App\EventSubscriber\CommentNotificationSubscriber:
         $sender: '%app.notifications.email_sender%'
+
+    # uploader images
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%image_directory%'
