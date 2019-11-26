@@ -12,13 +12,12 @@
             </h2>
 
             <p class="post-metadata">
-                <span class="metadata"><i class="fa fa-calendar"></i> {{ post.publishedAt|localizeddate('long', 'medium', null, 'UTC') }}</span>
-                <span class="metadata"><i class="fa fa-user"></i> {{ post.author.fullName }}</span>
+                <span class="metadata"><i class="fa fa-calendar"></i> {{ post.publishedAt|date('d/m/Y h:m') }}</span>
             </p>
 
             {% if post.imageName %}
                 <div class="form-group size-image">
-                    <img src="{{asset('/uploads/images/' ~ post.imageName) | imagine_filter('post_show')}}" title="{{ post.title }}" alt="{{ post.title }}" />
+                    <img class="responsive" src="{{asset('/uploads/images/' ~ post.imageName) | imagine_filter('post_show')}}" title="{{ post.title }}" alt="{{ post.title }}" />
                 </div>
             {% endif %}
 

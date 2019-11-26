@@ -2,13 +2,31 @@
 
 {% block body_id 'blog_post_show' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <script src="https://www.google.com/recaptcha/api.js?render=6LcAssQUAAAAAHXX7zkSCCPOmDD48wZn9UNoyvMg"></script>
+    <script>
+        grecaptcha.ready(function() {
+            grecaptcha.execute('6LcAssQUAAAAAHXX7zkSCCPOmDD48wZn9UNoyvMg', {action: 'validate_captcha'});
+            // grecaptcha.execute('6LcAssQUAAAAAHXX7zkSCCPOmDD48wZn9UNoyvMg', {action: 'validate_captcha'}).then(function(token) {
+            //     document.getElementById('g-recaptcha-response').value = token;
+            // });
+        });
+    </script>
+{% endblock %}
+
 {% block main %}
     <h1>{{ post.title }}</h1>
 
     <p class="post-metadata">
-        <span class="metadata"><i class="fa fa-calendar"></i> {{ post.publishedAt|localizeddate('long', 'medium', null, 'UTC') }}</span>
-        <span class="metadata"><i class="fa fa-user"></i> {{ post.author.fullName }}</span>
+        <span class="metadata"><i class="fa fa-calendar"></i> {{ post.publishedAt|date('d/m/Y h:m') }}</span>
     </p>
+
+    {% if post.imageName %}
+        <div class="form-group size-image">
+            <img class="responsive" src="{{asset('/uploads/images/' ~ post.imageName) | imagine_filter('post_show')}}" title="{{ post.title }}" alt="{{ post.title }}" />
+        </div>
+    {% endif %}
 
     {{ post.content|md2html }}
 
@@ -24,11 +42,13 @@
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             {{ render(controller('App\\Controller\\BlogController::commentForm', {'id': post.id})) }}
         {% else %}
+
+            {{ render(controller('App\\Controller\\BlogController::commentForm', {'id': post.id})) }}
             <p>
-                <a class="btn btn-success" href="{{ path('security_login', {'redirect_to': app.request.pathInfo}) }}">
-                    <i class="fa fa-sign-in" aria-hidden="true"></i> {{ 'action.sign_in'|trans }}
-                </a>
-                {{ 'post.to_publish_a_comment'|trans }}
+{#                <a class="btn btn-success" href="{{ path('security_login', {'redirect_to': app.request.pathInfo}) }}">#}
+{#                    <i class="fa fa-sign-in" aria-hidden="true"></i> {{ 'action.sign_in'|trans }}#}
+{#                </a>#}
+{#                {{ 'post.to_publish_a_comment'|trans }}#}
             </p>
         {% endif %}
     </div>
@@ -41,11 +61,11 @@
         <div class="row post-comment">
             <a name="comment_{{ comment.id }}"></a>
             <h4 class="col-sm-3">
-                <strong>{{ comment.author.fullName }}</strong> {{ 'post.commented_on'|trans }}
+{#                <strong>{{ comment.author.fullName }}</strong> {{ 'post.commented_on'|trans }}#}
                 {# it's not mandatory to set the timezone in localizeddate(). This is done to
                    avoid errors when the 'intl' PHP extension is not available and the application
                    is forced to use the limited "intl polyfill", which only supports UTC and GMT #}
-                <strong>{{ comment.publishedAt|localizeddate('medium', 'short', null, 'UTC') }}</strong>
+                <strong>{{ comment.publishedAt|date('d/m/Y h:m') }}</strong>
             </h4>
             <div class="col-sm-9">
                 {{ comment.content|md2html }}

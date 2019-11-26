@@ -67,14 +67,6 @@ class Comment
      */
     private $publishedAt;
 
-    /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $author;
-
     public function __construct()
     {
         $this->publishedAt = new \DateTime();
@@ -113,16 +105,6 @@ class Comment
     public function setPublishedAt(\DateTime $publishedAt): void
     {
         $this->publishedAt = $publishedAt;
-    }
-
-    public function getAuthor(): ?User
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(User $author): void
-    {
-        $this->author = $author;
     }
 
     public function getPost(): ?Post

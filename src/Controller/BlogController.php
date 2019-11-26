@@ -13,6 +13,7 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Post;
+use App\Entity\User;
 use App\Events\CommentCreatedEvent;
 use App\Form\CommentType;
 use App\Repository\PostRepository;
@@ -86,7 +87,6 @@ class BlogController extends AbstractController
 
     /**
      * @Route("/comment/{postSlug}/new", methods={"POST"}, name="comment_new")
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @ParamConverter("post", options={"mapping": {"postSlug": "slug"}})
      *
      * NOTE: The ParamConverter mapping is required because the route parameter
@@ -96,8 +96,10 @@ class BlogController extends AbstractController
     public function commentNew(Request $request, Post $post, EventDispatcherInterface $eventDispatcher): Response
     {
         $comment = new Comment();
-        $comment->setAuthor($this->getUser());
         $post->addComment($comment);
+
+//        dump($comment);
+//        die('TEST');
 
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);

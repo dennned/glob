@@ -73,7 +73,7 @@ class PostType extends AbstractType
             ->add('image', FileType::class, [
                 'label' => 'label.upload.image',
                 'mapped' => false,
-                'required' => true,
+                'required' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '1500k',
