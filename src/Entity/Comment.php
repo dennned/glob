@@ -67,6 +67,18 @@ class Comment
      */
     private $publishedAt;
 
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="name.blank")
+     * @Assert\Length(
+     *     min=2,
+     *     minMessage="name.too_short",
+     *     max=100,
+     *     maxMessage="name.too_long"
+     * )
+     */
+    private $name;
+
     public function __construct()
     {
         $this->publishedAt = new \DateTime();
@@ -115,5 +127,17 @@ class Comment
     public function setPost(Post $post): void
     {
         $this->post = $post;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
     }
 }

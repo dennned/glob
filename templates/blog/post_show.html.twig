@@ -7,10 +7,9 @@
     <script src="https://www.google.com/recaptcha/api.js?render=6LcAssQUAAAAAHXX7zkSCCPOmDD48wZn9UNoyvMg"></script>
     <script>
         grecaptcha.ready(function() {
-            grecaptcha.execute('6LcAssQUAAAAAHXX7zkSCCPOmDD48wZn9UNoyvMg', {action: 'validate_captcha'});
-            // grecaptcha.execute('6LcAssQUAAAAAHXX7zkSCCPOmDD48wZn9UNoyvMg', {action: 'validate_captcha'}).then(function(token) {
-            //     document.getElementById('g-recaptcha-response').value = token;
-            // });
+            grecaptcha.execute('6LcAssQUAAAAAHXX7zkSCCPOmDD48wZn9UNoyvMg', {action: 'validate_captcha'}).then(function(token) {
+                document.getElementById('g-recaptcha-response').value = token;
+            });
         });
     </script>
 {% endblock %}
@@ -33,24 +32,7 @@
     {{ include('blog/_post_tags.html.twig') }}
 
     <div id="post-add-comment" class="well">
-        {# The 'IS_AUTHENTICATED_FULLY' role ensures that the user has entered
-        their credentials (login + password) during this session. If they
-        are automatically logged via the 'Remember Me' functionality, they won't
-        be able to add a comment.
-        See https://symfony.com/doc/current/security/remember_me.html#forcing-the-user-to-re-authenticate-before-accessing-certain-resources
-        #}
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            {{ render(controller('App\\Controller\\BlogController::commentForm', {'id': post.id})) }}
-        {% else %}
-
-            {{ render(controller('App\\Controller\\BlogController::commentForm', {'id': post.id})) }}
-            <p>
-{#                <a class="btn btn-success" href="{{ path('security_login', {'redirect_to': app.request.pathInfo}) }}">#}
-{#                    <i class="fa fa-sign-in" aria-hidden="true"></i> {{ 'action.sign_in'|trans }}#}
-{#                </a>#}
-{#                {{ 'post.to_publish_a_comment'|trans }}#}
-            </p>
-        {% endif %}
+        {{ render(controller('App\\Controller\\BlogController::commentForm', {'id': post.id})) }}
     </div>
 
     <h3>
@@ -61,7 +43,7 @@
         <div class="row post-comment">
             <a name="comment_{{ comment.id }}"></a>
             <h4 class="col-sm-3">
-{#                <strong>{{ comment.author.fullName }}</strong> {{ 'post.commented_on'|trans }}#}
+                <strong>{{ comment.name }}</strong> {{ 'post.commented_on'|trans }}
                 {# it's not mandatory to set the timezone in localizeddate(). This is done to
                    avoid errors when the 'intl' PHP extension is not available and the application
                    is forced to use the limited "intl polyfill", which only supports UTC and GMT #}

@@ -13,16 +13,15 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Post;
-use App\Entity\User;
 use App\Events\CommentCreatedEvent;
 use App\Form\CommentType;
 use App\Repository\PostRepository;
 use App\Repository\TagRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -54,8 +53,6 @@ class BlogController extends AbstractController
             $tag = $tags->findOneBy(['name' => $request->query->get('tag')]);
         }
         $latestPosts = $posts->findLatest($page, $tag);
-
-        dump($latestPosts);
 
         // Every template name also has two extensions that specify the format and
         // engine for that template.
@@ -98,13 +95,17 @@ class BlogController extends AbstractController
         $comment = new Comment();
         $post->addComment($comment);
 
-//        dump($comment);
-//        die('TEST');
-
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
+        // check ReCaptcha
+        $errorCaptcha = $this->checkCaptcha();
+        if(!empty($errorCaptcha)){
+            $form->addError(new FormError($errorCaptcha['error']));
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
             $em->flush();
@@ -168,5 +169,37 @@ class BlogController extends AbstractController
         }
 
         return $this->json($results);
+    }
+
+    /**
+     * @return array
+     */
+    private function checkCaptcha()
+    {
+        $captcha = $_POST['g-recaptcha-response'] ?? false;
+        $error = ['error' => 'Ваш комментарий - спам!'];
+
+        if (!$captcha) {
+            return $error;
+        } else {
+            $secret   = $this->getParameter('recaptcha_key_secret');
+            $response = file_get_contents(
+                "https://www.google.com/recaptcha/api/siteverify?secret=" . $secret . "&response=" . $captcha . "&remoteip=" . $_SERVER['REMOTE_ADDR']
+            );
+            // use json_decode to extract json response
+            $response = json_decode($response);
+
+            if ($response->success === false) {
+                return $error;
+            }
+        }
+
+        //... The Captcha is valid you can continue with the rest of your code
+        //... Add code to filter access using $response . score
+        if ($response->success === true && $response->score <= 0.5) {
+            return [];
+        }
+
+        return $error;
     }
 }

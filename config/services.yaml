@@ -6,6 +6,7 @@ parameters:
     app_locales: ru
     app.notifications.email_sender: anonymous@example.com
     image_directory: '%kernel.project_dir%/public/uploads/images'
+    recaptcha_key_secret: 'KEY_SECRET'
 
 services:
     # default configuration for services in *this* file

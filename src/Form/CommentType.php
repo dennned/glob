@@ -45,10 +45,10 @@ class CommentType extends AbstractType
             ->add('content', TextareaType::class, [
                 'help' => 'help.comment_content',
             ])
-//            ->add('captcha', TextType::class, [
-//                'help' => 'CAPTCHA',
-//
-//            ])
+            ->add('name', TextType::class, [
+                'label' => 'label.comment.name',
+                'required' => true,
+            ])
         ;
     }
 

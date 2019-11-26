@@ -30,6 +30,20 @@
                 <source>comment.too_long</source>
                 <target>Комментарий слишком длинный, (максимум { limit } символов).</target>
             </trans-unit>
+
+            <trans-unit id="name.blank">
+                <source>name.blank</source>
+                <target>Пожалуйста, не оставляйте имя пустым!</target>
+            </trans-unit>
+            <trans-unit id="name.too_short">
+                <source>name.too_short</source>
+                <target>Имя слишком короткое, (минимум { limit } символов).</target>
+            </trans-unit>
+            <trans-unit id="name.too_long">
+                <source>name.too_long</source>
+                <target>Имя слишком длинное, (максимум { limit } символов).</target>
+            </trans-unit>
+
             <trans-unit id="comment.is_spam">
                 <source>comment.is_spam</source>
                 <target>Содержание этого комментария было расценено как спам.</target>

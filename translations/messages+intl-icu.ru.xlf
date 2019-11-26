@@ -198,6 +198,10 @@
                 <target>Изменить пароль</target>
             </trans-unit>
 
+            <trans-unit id="label.comment.name">
+                <source>label.comment.name</source>
+            <target>Имя</target>
+            </trans-unit>
             <trans-unit id="label.title">
                 <source>label.title</source>
                 <target>Название</target>
