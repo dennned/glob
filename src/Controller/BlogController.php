@@ -172,6 +172,7 @@ class BlogController extends AbstractController
     }
 
     /**
+     * ReCaptcha v2
      * @return array
      */
     private function checkCaptcha()
@@ -196,7 +197,7 @@ class BlogController extends AbstractController
 
         //... The Captcha is valid you can continue with the rest of your code
         //... Add code to filter access using $response . score
-        if ($response->success === true && $response->score <= 0.5) {
+        if ($response->success === true) {
             return [];
         }
 

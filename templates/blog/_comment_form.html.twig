@@ -30,11 +30,9 @@
 
             {{ form_widget(form.content, {attr: {rows: 10}}) }}
 
-            <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
-            <input type="hidden" name="action" value="validate_captcha">
-
             {{ form_help(form.content) }}
         </div>
+        <div class="g-recaptcha" data-sitekey="6LdB3sQUAAAAABXxx9XXr6QNUCNoJTA3ju71Gf1m"></div>
 
         <div class="form-group">
             <button class="btn btn-primary pull-right" type="submit">
