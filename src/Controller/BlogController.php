@@ -36,6 +36,25 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BlogController extends AbstractController
 {
+
+    /**
+     * Home Page, check routes.yaml
+     *
+     * @param string $template
+     * @return Response
+     */
+    public function homePage(string $template): Response
+    {
+        $params = $this->checkGetParams();
+
+        $repository = $this->getDoctrine()->getRepository(Post::class);
+        $latestPosts = $repository->findLatest($page = 1, null, $params);
+
+        return $this->render($template, [
+            'paginator' => $latestPosts,
+        ]);
+    }
+
     /**
      * @Route("/", defaults={"page": "1", "_format"="html"}, methods={"GET"}, name="blog_index")
      * @Route("/rss.xml", defaults={"page": "1", "_format"="xml"}, methods={"GET"}, name="blog_rss")
@@ -202,5 +221,22 @@ class BlogController extends AbstractController
         }
 
         return $error;
+    }
+
+    /**
+     * @return array
+     */
+    private function checkGetParams(): array
+    {
+        $getParams = $_GET['get'] ?? null;
+        $categoryId = null;
+
+        if(null !== $getParams){
+            $categoryId = intval($getParams['category']) ? $getParams['category'] : $categoryId;
+        }
+
+        return [
+            'categoryId' => $categoryId,
+        ];
     }
 }
