@@ -1,0 +1,20 @@
+<div class="section">
+    <div>
+
+{#        {{ include('blog/_post_tags.html.twig') }}#}
+
+        {% if tags is defined %}
+
+            <h4>TAGS :</h4>
+
+            <p class="post-tags">
+                {% for tag in tags %}
+                    <a href="{{ path('blog_index',{'tag': tag.name}) }}" class="label label-default">
+                        <i class="fa fa-tag"></i> {{ tag.name }}
+                    </a>
+                {% endfor %}
+            </p>
+
+        {% endif %}
+    </div>
+</div>

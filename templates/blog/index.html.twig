@@ -59,6 +59,7 @@
 {% block sidebar %}
 
     {{ render(controller('App\\Controller\\CategoryController::showCategories')) }}
+    {{ render(controller('App\\Controller\\TagController::showTagsCloud')) }}
 
 {#    {{ parent() }}#}
 
