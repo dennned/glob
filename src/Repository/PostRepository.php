@@ -34,7 +34,14 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
-    public function findLatest(int $page = 1, Tag $tag = null): Paginator
+    /**
+     * @param int $page
+     * @param Tag|null $tag
+     * @param null $params
+     * @return Paginator
+     * @throws \Exception
+     */
+    public function findLatest(int $page = 1, Tag $tag = null, $params = null): Paginator
     {
         $qb = $this->createQueryBuilder('p')
             ->addSelect('a', 't')
@@ -48,6 +55,11 @@ class PostRepository extends ServiceEntityRepository
         if (null !== $tag) {
             $qb->andWhere(':tag MEMBER OF p.tags')
                 ->setParameter('tag', $tag);
+        }
+
+        if($params['categoryId']){
+            $qb->andWhere('p.category = :categoryId')
+                ->setParameter('categoryId', $params['categoryId']);
         }
 
         return (new Paginator($qb))->paginate($page);

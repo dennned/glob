@@ -173,7 +173,6 @@ class BlogController extends AbstractController
                 $post->setImageName($newFilename);
             }
 
-
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', 'post.updated_successfully');

@@ -367,23 +367,30 @@ body#blog_search .post-metadata {
   height: auto;
 
 }
-#sidebar .list-categories-bloc {
+.align-content-center {
+  text-align: center;
+}
+#sidebar{
   h4 {
     text-align: center;
     padding: 0px 0px 10px 0;
     font-weight: 700;
   }
-  ul {
-    color: #18bc9c;
-  }
-  a {
-    font-weight: 400;
-    margin: 0;
-    padding: 0;
-    color: #000;
-  }
-  .category-selected {
-    font-weight: bold;
-    text-decoration: underline;
+  .list-categories-bloc {
+    ul {
+      color: #18bc9c;
+    }
+    a {
+      font-weight: 400;
+      margin: 0;
+      padding: 0;
+      color: #000;
+    }
+    .category-selected {
+      font-weight: bold;
+      text-decoration: underline;
+    }
   }
 }
+
+
