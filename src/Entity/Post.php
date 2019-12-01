@@ -125,6 +125,11 @@ class Post
      */
     private $imageName;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $video_id;
+
     public function __construct()
     {
         $this->publishedAt = new \DateTime();
@@ -254,5 +259,17 @@ class Post
     public function setImageName($imageName)
     {
         $this->imageName = $imageName;
+    }
+
+    public function getVideoId(): ?string
+    {
+        return $this->video_id;
+    }
+
+    public function setVideoId(string $video_id): self
+    {
+        $this->video_id = $video_id;
+
+        return $this;
     }
 }

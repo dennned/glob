@@ -26,7 +26,6 @@ use Symfony\Component\Routing\Annotation\Route;
  * See http://knpbundles.com/keyword/admin
  *
  * @Route("/admin/post")
- * @IsGranted("ROLE_ADMIN")
  *
  * @author Ryan Weaver <weaverryan@gmail.com>
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
@@ -53,7 +52,7 @@ class BlogController extends AbstractController
      */
     public function index(PostRepository $posts): Response
     {
-        $authorPosts = $posts->findBy(['author' => $this->getUser()], ['publishedAt' => 'DESC']);
+        $authorPosts = $posts->findBy([], ['publishedAt' => 'DESC']);
 
         return $this->render('admin/blog/index.html.twig', ['posts' => $authorPosts]);
     }
@@ -133,7 +132,6 @@ class BlogController extends AbstractController
     {
         // This security check can also be performed
         // using an annotation: @IsGranted("show", subject="post", message="Posts can only be shown to their authors.")
-        $this->denyAccessUnlessGranted(PostVoter::SHOW, $post, 'Posts can only be shown to their authors.');
 
         return $this->render('admin/blog/show.html.twig', [
             'post' => $post,
@@ -144,7 +142,6 @@ class BlogController extends AbstractController
      * Displays a form to edit an existing Post entity.
      *
      * @Route("/{id<\d+>}/edit",methods={"GET", "POST"}, name="admin_post_edit")
-     * @IsGranted("edit", subject="post", message="Posts can only be edited by their authors.")
      *
      * @param Request $request
      * @param Post $post
@@ -190,7 +187,6 @@ class BlogController extends AbstractController
      * Deletes a Post entity.
      *
      * @Route("/{id}/delete", methods={"POST"}, name="admin_post_delete")
-     * @IsGranted("delete", subject="post")
      *
      * @param Request $request
      * @param Post $post

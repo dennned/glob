@@ -6,7 +6,9 @@ parameters:
     app_locales: ru
     app.notifications.email_sender: anonymous@example.com
     image_directory: '%kernel.project_dir%/public/uploads/images'
-    recaptcha_key_secret: 'KEY_SECRET'
+    recaptcha_key_secret: ''
+    api_key_youtube: ''
+    id_youtube_chanel: ''
 
 services:
     # default configuration for services in *this* file
@@ -39,3 +41,14 @@ services:
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%image_directory%'
+
+    # cron video
+    App\Command\LanceYoutubeCronCommand:
+        arguments:
+            $idYoutubeChanel: '%id_youtube_chanel%'
+            $keyApi: '%api_key_youtube%'
+
+    # cron video tag
+    App\Command\LanceYoutubeTagCronCommand:
+        arguments:
+            $keyApi: '%api_key_youtube%'
