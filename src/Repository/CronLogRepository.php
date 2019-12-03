@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\CronLog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 
 /**
  * @method CronLog|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,6 +21,11 @@ class CronLogRepository extends ServiceEntityRepository
         parent::__construct($registry, CronLog::class);
     }
 
+    /**
+     * @return mixed
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     public function countLogs()
     {
         return $this->createQueryBuilder('c')
@@ -28,6 +35,10 @@ class CronLogRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @return mixed
+     * @throws NonUniqueResultException
+     */
     public function getLatestLogs()
     {
         return $this->createQueryBuilder('c')

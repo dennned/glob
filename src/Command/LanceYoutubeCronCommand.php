@@ -141,7 +141,6 @@ class LanceYoutubeCronCommand extends Command
             $youtube = new \Google_Service_YouTube($client);
             $responce = $youtube->search->listSearch('id,snippet', $params);
 
-
             // save log API Youtube
             $log = new CronLog();
             $log
@@ -188,7 +187,6 @@ class LanceYoutubeCronCommand extends Command
             ->setName($errorMsg)
             ->setCount(0)
             ->setDatetime(new \DateTime('now'))
-            ->setNextPage('empty')
             ->setStatus(false);
 
         $this->saveLog($log);
@@ -196,18 +194,25 @@ class LanceYoutubeCronCommand extends Command
 
     /**
      * @param array $items
+     * @throws \Exception
      */
     protected function saveVideos(array $items = [])
     {
         foreach ($items as $item){
+
             $video = new VideoYoutube();
             $video
-                ->setName($item['snippet']['title'])
-                ->setDescription($item['snippet']['description'])
-                ->setVideoId($item['id']['videoId']);
+                ->setName(strval($item['snippet']['title']))
+                ->setDescription(strval($item['snippet']['description']))
+                ->setVideoId(strval($item['id']['videoId']))
+                ->setIsPosted(false);
 
-            $this->entityManager->persist($video);
-            $this->entityManager->flush();
+            try{
+                $this->entityManager->persist($video);
+                $this->entityManager->flush();
+            }catch(\Exception $e){
+                $this->saveErrorLog('cron-youtube-log-ERROR : saveVideos - '.$e->getMessage());
+            }
         }
     }
 }
