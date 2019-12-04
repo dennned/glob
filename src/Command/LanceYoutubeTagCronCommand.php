@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\CronLog;
 use App\Entity\VideoYoutube;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -127,21 +128,58 @@ class LanceYoutubeTagCronCommand extends Command
     /**
      * @param $youtube
      * @param VideoYoutube $video
+     * @throws \Exception
      */
     protected function saveVideos($youtube, VideoYoutube $video)
     {
-        $responce = $youtube->videos->listVideos('id,snippet', [
-            'id' => $video->getVideoId()
-        ])['items'][0];
+        try{
+            $responce = $youtube->videos->listVideos('id,snippet', [
+                'id' => $video->getVideoId()
+            ])['items'][0];
 
-        $tags = null;
-        if(is_array($responce->getSnippet()->getTags())){
-            $tags = implode(',', $responce->getSnippet()->getTags());
+            $tags = null;
+            if(is_array($responce->getSnippet()->getTags())){
+                $tags = implode(',', $responce->getSnippet()->getTags());
+            }
+
+            $video->setTags($tags);
+
+            $this->entityManager->persist($video);
+            $this->entityManager->flush();
+        }catch(\Exception $e){
+            $this->saveErrorLog('cron-tag-youtube-log-ERROR : saveVideos -'.$e->getMessage());
         }
+    }
 
-        $video->setTags($tags);
+    /**
+     * Save error log
+     * @param string $errorMsg
+     * @throws \Exception
+     */
+    protected function saveErrorLog(string $errorMsg = 'ERROR')
+    {
+        $log = new CronLog();
+        $log
+            ->setName($errorMsg)
+            ->setCount(0)
+            ->setDatetime(new \DateTime('now'))
+            ->setStatus(false);
 
-        $this->entityManager->persist($video);
-        $this->entityManager->flush();
+        $this->saveLog($log);
+    }
+
+    /**
+     * Save log or error log
+     * @param CronLog $log
+     * @throws \Exception
+     */
+    protected function saveLog(CronLog $log)
+    {
+        try{
+            $this->entityManager->persist($log);
+            $this->entityManager->flush();
+        } catch (\Exception $e) {
+            $this->saveErrorLog('cron-tag-youtube-log-ERROR : saveLog - '.$e->getMessage());
+        }
     }
 }

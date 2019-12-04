@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\CronLog;
 use App\Entity\Post;
 use App\Entity\Tag;
 use App\Entity\VideoYoutube;
@@ -112,11 +113,18 @@ class LancePostCronCommand extends Command
     protected function addPost()
     {
         $repositoryVideos = $this->entityManager->getRepository(VideoYoutube::class);
+        $repositoryPosts = $this->entityManager->getRepository(Post::class);
 
         /** @var VideoYoutube $video */
         $video = $repositoryVideos->findOneVideoNonPosted();
 
         if(null !== $video){
+
+            if(null !== $repositoryPosts->findOneBy(['video_id' => $video->getVideoId()])){
+                $this->saveErrorLog('cron-post-youtube-log-ERROR : addPost -> videoId exist');
+                return;
+            }
+
             $post = new Post();
             $post->setTitle($video->getName());
             $post->setSlug(Slugger::slugify($video->getName()));
@@ -125,9 +133,17 @@ class LancePostCronCommand extends Command
             $post->setVideoId($video->getVideoId());
 
             $tags = explode(',', $video->getTags());
+            $repositoryTags = $this->entityManager->getRepository(Tag::class);
             foreach ($tags as $item) {
+                $isTag = $repositoryTags->findOneBy(['name' => $item]);
+
                 $tag = new Tag();
-                $tag->setName($item);
+                if(null === $isTag){
+
+                    $tag->setName($item);
+                } else {
+                    $tag = $isTag;
+                }
 
                 $post->addTag($tag);
             }
@@ -135,23 +151,59 @@ class LancePostCronCommand extends Command
             $this->entityManager->persist($post);
             $this->entityManager->flush();
 
+            $this->updateVideo($video);
 
-//            ->setCategory()
-//                ->setContent($video->getDescription())
-//                ->setSummary($video->getDescription())
-//                ->setVideoId($video->getVideoId())
-////            ->setAuthor()
-//                ->setSlug(Slugger::slugify($video->getName())
-//                    ->setTitle($video->getName());
-
-//            dump($tags);
-//            dump($video);
-//            dump($post);
-//            die;
+        } else {
+            $this->saveErrorLog('cron-post-youtube-log-ERROR : addPost');
         }
 
+    }
 
+    /**
+     * @param $video
+     * @throws \Exception
+     */
+    protected function updateVideo($video)
+    {
+        if($video instanceof VideoYoutube){
+            $video->setIsPosted(true);
 
+            $this->entityManager->persist($video);
+            $this->entityManager->flush();
+        } else {
+            $this->saveErrorLog('cron-post-youtube-log-ERROR : updateVideo');
+        }
+    }
 
+    /**
+     * Save error log
+     * @param string $errorMsg
+     * @throws \Exception
+     */
+    protected function saveErrorLog(string $errorMsg = 'ERROR')
+    {
+        $log = new CronLog();
+        $log
+            ->setName($errorMsg)
+            ->setCount(0)
+            ->setDatetime(new \DateTime('now'))
+            ->setStatus(false);
+
+        $this->saveLog($log);
+    }
+
+    /**
+     * Save log or error log
+     * @param CronLog $log
+     * @throws \Exception
+     */
+    protected function saveLog(CronLog $log)
+    {
+        try{
+            $this->entityManager->persist($log);
+            $this->entityManager->flush();
+        } catch (\Exception $e) {
+            $this->saveErrorLog('cron-post-youtube-log-ERROR : saveLog - '.$e->getMessage());
+        }
     }
 }
