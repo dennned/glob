@@ -22,6 +22,11 @@ class Category
      */
     private $name;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isCron;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -42,5 +47,17 @@ class Category
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    public function getIsCron(): ?bool
+    {
+        return $this->isCron;
+    }
+
+    public function setIsCron(?bool $isCron): self
+    {
+        $this->isCron = $isCron;
+
+        return $this;
     }
 }
