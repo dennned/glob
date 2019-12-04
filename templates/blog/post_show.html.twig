@@ -14,11 +14,14 @@
         <span class="metadata"><i class="fa fa-calendar"></i> {{ post.publishedAt|date('d/m/Y h:m') }}</span>
     </p>
 
-    {% if post.imageName %}
-        <div class="form-group size-image">
+    <div class="form-group size-image">
+        {% if post.imageName and post.videoId is null %}
             <img class="responsive" src="{{asset('/uploads/images/' ~ post.imageName) | imagine_filter('post_show')}}" title="{{ post.title }}" alt="{{ post.title }}" />
-        </div>
-    {% endif %}
+        {% else %}
+            {% set thumbnail = 'https://i.ytimg.com/vi/'~ post.videoId ~'/hqdefault.jpg' %}
+            <img class="responsive" src="{{thumbnail}}" title="{{ post.title }}" alt="{{ post.title }}" />
+        {% endif %}
+    </div>
 
     {{ post.content|md2html }}
 
