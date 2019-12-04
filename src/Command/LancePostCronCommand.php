@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\Category;
 use App\Entity\CronLog;
 use App\Entity\Post;
 use App\Entity\Tag;
@@ -36,6 +37,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 class LancePostCronCommand extends Command
 {
     private const LIMIT_VIDEOS = 5;
+    private const LABEL_CATEGORY = 'Видео';
 
     // to make your command lazily loaded, configure the $defaultName static property,
     // so it will be instantiated only when the command is actually called.
@@ -132,6 +134,10 @@ class LancePostCronCommand extends Command
             $post->setContent($video->getDescription());
             $post->setVideoId($video->getVideoId());
 
+            $category = $this->checkCategory();
+            $post->setCategory($category);
+
+
             $tags = explode(',', $video->getTags());
             $repositoryTags = $this->entityManager->getRepository(Tag::class);
             foreach ($tags as $item) {
@@ -139,7 +145,6 @@ class LancePostCronCommand extends Command
 
                 $tag = new Tag();
                 if(null === $isTag){
-
                     $tag->setName($item);
                 } else {
                     $tag = $isTag;
@@ -157,6 +162,29 @@ class LancePostCronCommand extends Command
             $this->saveErrorLog('cron-post-youtube-log-ERROR : addPost');
         }
 
+    }
+
+    /**
+     * @return Category|object|null
+     */
+    protected function checkCategory()
+    {
+        $repositoryCategory = $this->entityManager->getRepository(Category::class);
+        $isCategory = $repositoryCategory->findOneBy(['isCron' => true]);
+
+        if(null === $isCategory){
+            $category = new Category();
+            $category
+                ->setName(self::LABEL_CATEGORY)
+                ->setIsCron(true);
+
+            $this->entityManager->persist($category);
+            $this->entityManager-> flush();
+
+            $isCategory = $category;
+        }
+
+        return $isCategory;
     }
 
     /**
