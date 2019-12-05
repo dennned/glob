@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CategoryController extends AbstractController
@@ -16,7 +17,8 @@ class CategoryController extends AbstractController
 
         $categories = [];
         foreach ($repositoryCategories->findAll() as $category) {
-            $categories[$category->getId()] = $category;
+            $categories[$category->getId()]['category'] = $category;
+            $categories[$category->getId()]['count'] = $this->getCountCategories($category->getId());
         }
 
         $getParams = $_GET['get'] ?? null;
@@ -30,5 +32,16 @@ class CategoryController extends AbstractController
             'categories' => $categories,
             'categoryIdSelected' => $categoryIdSelected,
         ]);
+    }
+
+    /**
+     * @param $idCategory
+     * @return int
+     */
+    protected function getCountCategories($idCategory)
+    {
+        $repositoryPost = $this->getDoctrine()->getRepository(Post::class);
+
+        return count($repositoryPost->findBy(['category' => $idCategory]));
     }
 }

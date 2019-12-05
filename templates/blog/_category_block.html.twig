@@ -1,13 +1,16 @@
 <div class="section list-categories-bloc">
     <div class="well well-lg">
+
         {% if categories is defined %}
 
             <h4>Категории :</h4>
 
             <ul class="cat-menu">
 
+                {% for item in categories %}
 
-                {% for category in categories %}
+                    {% set category = item['category'] %}
+                    {% set count = item['count'] %}
 
                     {% set selectedCategory = '' %}
                     {% if category.id == categoryIdSelected %}
@@ -15,7 +18,7 @@
                     {% endif %}
 
                     <li>
-                        <a {{ selectedCategory }} href="{{ path('homepage',{'get[category]': category.id}) }}" title="{{ category.name }}">{{ category.name }}</a>
+                        <a {{ selectedCategory }} href="{{ path('homepage',{'get[category]': category.id}) }}" title="{{ category.name }}">{{ category.name }} ({{ count }})</a>
                     </li>
                 {% endfor %}
             </ul>
