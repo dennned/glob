@@ -253,7 +253,7 @@ body#login #login-users-help p .console {
   margin-bottom: 16px;
 }
 .post-metadata .metadata {
-  margin-right: 1.5em;
+  margin-right: 0;
 }
 
 .post-tags .label {
@@ -271,9 +271,11 @@ body#blog_index article.post {
   margin-bottom: 3em;
 }
 
-body#blog_index .post-metadata {
+body#blog_index .post-metadata,
+body#blog_post_show .post-metadata{
   font-size: 16px;
   margin-bottom: 8px;
+  text-align: right;
 }
 
 body#blog_index .post-tags .label-default {
@@ -293,9 +295,6 @@ body#blog_post_show #main h3 {
 body#blog_post_show .post-tags .label-default {
   background-color: #e9ecec;
   color: #6D8283;
-  font-size: 16px;
-  margin-right: 10px;
-  padding: .4em 1em .5em;
 }
 body#blog_post_show .post-tags .label-default i {
   color: #95A6A7;

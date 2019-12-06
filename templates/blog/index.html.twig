@@ -60,12 +60,6 @@
 {% endblock %}
 
 {% block sidebar %}
-
     {{ render(controller('App\\Controller\\CategoryController::showCategories')) }}
     {{ render(controller('App\\Controller\\TagController::showTagsCloud')) }}
-
-{#    {{ parent() }}#}
-
-{#    {{ show_source_code(_self) }}#}
-{#    {{ include('blog/_rss.html.twig') }}#}
 {% endblock %}

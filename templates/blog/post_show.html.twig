@@ -2,6 +2,8 @@
 
 {% block body_id 'blog_post_show' %}
 
+{% block title %}{{ 'site'|trans }} - {{ post.title }} {% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -25,11 +27,10 @@
 
     {{ post.content|md2html }}
 
-    {% if post.videoId is defined %}
+    {% if post.videoId is not null %}
         {% set linkVideo = 'https://www.youtube.com/embed/'~post.videoId %}
 
-        {{ dump(linkVideo) }}
-        <iframe width="560" height="315" src={{ linkVideo }} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe width="100%" height="400" src={{ linkVideo }} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     {% endif %}
 
     {{ include('blog/_post_tags.html.twig') }}
@@ -64,19 +65,7 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% if is_granted('edit', post) %}
-        <div class="section">
-            <a class="btn btn-lg btn-block btn-success" href="{{ path('admin_post_edit', {id: post.id}) }}">
-                <i class="fa fa-edit" aria-hidden="true"></i> {{ 'action.edit_post'|trans }}
-            </a>
-        </div>
-    {% endif %}
-
-    {# the parent() function includes the contents defined by the parent template
-      ('base.html.twig') for this block ('sidebar'). This is a very convenient way
-      to share common contents in different templates #}
-    {{ parent() }}
-
-    {{ show_source_code(_self) }}
+    {{ render(controller('App\\Controller\\CategoryController::showCategories')) }}
+    {{ render(controller('App\\Controller\\TagController::showTagsCloud')) }}
     {{ include('blog/_rss.html.twig') }}
 {% endblock %}
