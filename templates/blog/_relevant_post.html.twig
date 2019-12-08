@@ -13,7 +13,7 @@
                     </a>
                 </div>
                 <div class="col-sm-9">
-                    <a href="{{ path('blog_post', {slug: post.slug}) }}">
+                    <a href="{{ path('blog_post', {slug: post.slug}) }}" title="{{ post.title }}">
                         {{ post.title }}
                     </a>
                     <p>{{ post.summary }}</p>

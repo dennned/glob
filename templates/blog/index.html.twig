@@ -6,7 +6,7 @@
     {% for post in paginator.results %}
         <article class="post">
             <h2>
-                <a href="{{ path('blog_post', {slug: post.slug}) }}">
+                <a href="{{ path('blog_post', {slug: post.slug}) }}" title="{{ post.title }}">
                     {{ post.title }}
                 </a>
             </h2>
@@ -17,7 +17,7 @@
 
             <div class="form-group size-image">
                 {% if post.imageName and post.videoId is null %}
-                        <img class="responsive" src="{{asset('/uploads/images/' ~ post.imageName) | imagine_filter('post_show')}}" title="{{ post.title }}" alt="{{ post.title }}" />
+                    <img class="responsive" src="{{asset('/uploads/images/' ~ post.imageName) | imagine_filter('post_show')}}" title="{{ post.title }}" alt="{{ post.title }}" />
                 {% else %}
                     {% set thumbnail = 'https://i.ytimg.com/vi/'~ post.videoId ~'/maxresdefault.jpg' %}
                     <img class="responsive" src="{{thumbnail}}" title="{{ post.title }}" alt="{{ post.title }}" />

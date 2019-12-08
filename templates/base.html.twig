@@ -38,7 +38,7 @@
                 <div class="navbar navbar-default navbar-static-top" role="navigation">
                     <div class="container">
                         <div class="navbar-header col-md-3 col-lg-2">
-                            <a class="navbar-brand" href="{{ path('homepage') }}">
+                            <a class="navbar-brand" href="{{ path('homepage') }}" title="DENNEDBLOG - Блог о жизни во Франции в картинках и видео">
                                 DENNEDBLOG
                             </a>
 
@@ -56,14 +56,14 @@
 
                                 {% block header_navigation_links %}
                                     <li>
-                                        <a href="{{ path('blog_index') }}">
+                                        <a href="{{ path('blog_index') }}" title="{{ 'menu.homepage'|trans }}">
                                             <i class="fa fa-home" aria-hidden="true"></i> {{ 'menu.homepage'|trans }}
                                         </a>
                                     </li>
 
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <li>
-                                            <a href="{{ path('admin_post_index') }}">
+                                            <a href="{{ path('admin_post_index') }}" title="{{ 'menu.admin'|trans }}">
                                                 <i class="fa fa-lock" aria-hidden="true"></i> {{ 'menu.admin'|trans }}
                                             </a>
                                         </li>
@@ -71,7 +71,9 @@
                                 {% endblock %}
 
                                 <li>
-                                    <a href="{{ path('blog_search') }}"> <i class="fa fa-search"></i> {{ 'menu.search'|trans }}</a>
+                                    <a href="{{ path('blog_search') }}" title="{{ 'menu.search'|trans }}">
+                                        <i class="fa fa-search"></i> {{ 'menu.search'|trans }}
+                                    </a>
                                 </li>
 
                                 {% if app.user %}
