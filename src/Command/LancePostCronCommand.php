@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * A console command that creates users and stores them in the database.
@@ -37,8 +38,6 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class LancePostCronCommand extends Command
 {
-    private const LIMIT_VIDEOS = 5;
-    private const LABEL_CATEGORY = 'Видео';
 
     // to make your command lazily loaded, configure the $defaultName static property,
     // so it will be instantiated only when the command is actually called.
@@ -49,11 +48,13 @@ class LancePostCronCommand extends Command
      */
     private $io;
     private $entityManager;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, TranslatorInterface $translator)
     {
         parent::__construct();
         $this->entityManager = $em;
+        $this->translator = $translator;
     }
 
 
@@ -174,13 +175,14 @@ class LancePostCronCommand extends Command
      */
     protected function checkCategory()
     {
+        $labelCategory = $this->translator->trans('label.category.video');
         $repositoryCategory = $this->entityManager->getRepository(Category::class);
         $isCategory = $repositoryCategory->findOneBy(['isCron' => true]);
 
         if(null === $isCategory){
             $category = new Category();
             $category
-                ->setName(self::LABEL_CATEGORY)
+                ->setName($labelCategory)
                 ->setIsCron(true);
 
             $this->entityManager->persist($category);
