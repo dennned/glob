@@ -2,6 +2,23 @@
 
 {% block body_id 'blog_post_show' %}
 
+{% block meta %}
+    <meta name="title" content="{{ post.title }}">
+    <meta name="description" content="{{ post.title }} DENNEDBLOG - Расскажу как я переехал во Францию, где учился и как нашел работу."/>
+    <meta name="keywords" content="{{ post.tags|join(',') }}"/>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{app.request.uri}}">
+    <meta property="og:title" content="{{ post.title }}">
+    <meta property="og:description" content="{{ post.title }} DENNEDBLOG - Расскажу как я переехал во Францию, где учился и как нашел работу.">
+
+    {% set image = 'https://i.ytimg.com/vi/'~ post.videoId ~'/maxresdefault.jpg' %}
+    {% if post.imageName and post.videoId is null %}
+        {% set image = asset('/uploads/images/' ~ post.imageName) | imagine_filter('post_show') %}
+    {% endif %}
+    <meta property="og:image" content="{{ image }}">
+{% endblock %}
+
 {% block title %}{{ 'site'|trans }} - {{ post.title }} {% endblock %}
 
 {% block stylesheets %}
@@ -35,6 +52,8 @@
 
     {{ include('blog/_post_tags.html.twig') }}
 
+    {{ render(controller('App\\Controller\\BlogController::getRelevantPosts', {'tags': post.tags, 'id': post.id, 'limit' : 3})) }}
+
     <div id="post-add-comment" class="well">
         {{ render(controller('App\\Controller\\BlogController::commentForm', {'id': post.id})) }}
     </div>
@@ -48,9 +67,6 @@
             <a name="comment_{{ comment.id }}"></a>
             <h4 class="col-sm-3">
                 <strong>{{ comment.name }}</strong> {{ 'post.commented_on'|trans }}
-                {# it's not mandatory to set the timezone in localizeddate(). This is done to
-                   avoid errors when the 'intl' PHP extension is not available and the application
-                   is forced to use the limited "intl polyfill", which only supports UTC and GMT #}
                 <strong>{{ comment.publishedAt|date('d/m/Y h:m') }}</strong>
             </h4>
             <div class="col-sm-9">

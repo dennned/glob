@@ -294,6 +294,10 @@
                 <source>label.category.video</source>
                 <target>Видео</target>
             </trans-unit>
+            <trans-unit id="label.relevant_post">
+                <source>label.relevant_post</source>
+                <target>Будет интересно</target>
+            </trans-unit>
 
             <trans-unit id="menu.toggle_nav">
                 <source>menu.toggle_nav</source>

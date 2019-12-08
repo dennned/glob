@@ -8,6 +8,20 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="author" content="DENNEDBLOG" />
+        <meta name="copyright" content="DENNEDBLOG" />
+        {% block meta %}
+            <meta name="description" content="DENNEDBLOG - Блог о жизни во Франции в картинках и видео. Расскажу как я переехал во Францию, где учился и как нашел работу."/>
+            <meta name="keywords" content="жизнь во Франции, как переехать во Францию, русские во Франции, учеба во Франции, работа во Франции, русские в париже, русские в ницце"/>
+            <meta name="title" content="DENNEDBLOG - Блог о жизни во Франции в картинках и видео">
+            <!-- Open Graph / Facebook -->
+            <meta property="og:type" content="website">
+            <meta property="og:url" content="{{app.request.uri}}">
+            <meta property="og:title" content="DENNEDBLOG - Блог о жизни во Франции в картинках и видео">
+            <meta property="og:description" content="DENNEDBLOG - Блог о жизни во Франции в картинках и видео. Расскажу как я переехал во Францию, где учился и как нашел работу.">
+            <meta property="og:image" content="{{ asset('paris.jpg') }}">
+        {% endblock %}
+
         <title>{% block title %}{{ 'site'|trans }} - {{ 'site.homepage'|trans }} {% endblock %}</title>
         <link rel="alternate" type="application/rss+xml" title="{{ 'rss.title'|trans }}" href="{{ path('blog_rss') }}">
         {% block stylesheets %}

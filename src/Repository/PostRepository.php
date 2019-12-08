@@ -65,7 +65,35 @@ class PostRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Post[]
+     * @param null $tags
+     * @param Post $post
+     * @param int $limit
+     * @return mixed
+     */
+    public function findRelevantPosts($tags = null, Post $post, int $limit = 3)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->addSelect('t')
+            ->where('p.id <> :post')
+            ->setParameter('post', $post->getId())
+            ->leftJoin('p.tags', 't')
+        ;
+
+        if (null !== $tags) {
+            $qb->andWhere('t.id IN(:tag)')
+                ->setParameter('tag', $tags);
+        }
+
+        return $qb
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param string $query
+     * @param int $limit
+     * @return array
      */
     public function findBySearchQuery(string $query, int $limit = Post::NUM_ITEMS): array
     {

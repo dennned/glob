@@ -44,7 +44,6 @@ class BlogController extends AbstractController
         $this->translator = $translator;
     }
 
-
     /**
      * Home Page, check routes.yaml
      *
@@ -107,6 +106,27 @@ class BlogController extends AbstractController
         // dump($post, $this->getUser(), new \DateTime());
 
         return $this->render('blog/post_show.html.twig', ['post' => $post]);
+    }
+
+    /**
+     * @param $tags
+     * @param Post $post
+     * @param int $limit
+     * @param PostRepository $posts
+     * @return Response
+     */
+    public function getRelevantPosts($tags, Post $post, int $limit, PostRepository $posts)
+    {
+        $arrayTags = [];
+        foreach ($tags as $tag) {
+            $arrayTags[] = $tag->getId();
+        }
+
+        $tags = !empty($arrayTags) ? implode(',',$arrayTags) : null;
+
+        return $this->render('blog/_relevant_post.html.twig', [
+            'posts' => $posts->findRelevantPosts($tags, $post, $limit) ?? []
+        ]);
     }
 
     /**
