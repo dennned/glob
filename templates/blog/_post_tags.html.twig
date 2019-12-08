@@ -5,9 +5,20 @@
     {% endif %}
 
     <p class="post-tags">
+
+        {% set selectedCategory = app.request.query.get('tag') %}
+        {% if selectedTag is defined and selectedTag is not null %}
+            {% set selectedCategory = selectedTag %}
+        {% endif %}
+
         {% for tag in post.tags %}
+
+            {% if test is defined %}
+                {{ dump(test) }}
+            {% endif %}
+
             <a href="{{ path('blog_index', {'tag': tag.name == app.request.query.get('tag') ? null : tag.name}) }}"
-               class="label label-{{ tag.name == app.request.query.get('tag') ? 'success' : 'default' }}"
+               class="label label-{{ tag.name == selectedCategory ? 'success' : 'default' }}"
             >
                 <i class="fa fa-tag"></i> {{ tag.name }}
             </a>

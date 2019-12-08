@@ -26,9 +26,11 @@ class TagController extends AbstractController
             $post->addTag($tag);
         }
 
+
         return $this->render('blog/_post_tags.html.twig', [
             'titleBloc' => true,
             'post' => $post,
+            'selectedTag' => $_GET['tag'] ?? null
         ]);
     }
 }
