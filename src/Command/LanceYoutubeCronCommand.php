@@ -134,7 +134,6 @@ class LanceYoutubeCronCommand extends Command
         }
 
         try{
-
             $client = new \Google_Client();
             $client->setDeveloperKey($this->keyApi);
 
@@ -155,7 +154,7 @@ class LanceYoutubeCronCommand extends Command
             // save videos Youtube
             $this->saveVideos($responce['items']);
 
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->saveErrorLog('cron-youtube-log-ERROR : callYoutubeAPI - '.$e->getMessage());
         }
     }
@@ -210,7 +209,7 @@ class LanceYoutubeCronCommand extends Command
             try{
                 $this->entityManager->persist($video);
                 $this->entityManager->flush();
-            }catch(\Exception $e){
+            } catch (\Exception $e){
                 $this->saveErrorLog('cron-youtube-log-ERROR : saveVideos - '.$e->getMessage());
             }
         }

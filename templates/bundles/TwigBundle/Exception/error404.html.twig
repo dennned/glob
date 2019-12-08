@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block sidebar %}
-    {{ parent() }}
-
-    {{ show_source_code(_self) }}
+    {{ render(controller('App\\Controller\\CategoryController::showCategories')) }}
+    {{ render(controller('App\\Controller\\TagController::showTagsCloud')) }}
+    {{ include('blog/_rss.html.twig') }}
 {% endblock %}
