@@ -85,6 +85,7 @@ class AddUserCommand extends Command
             ->addArgument('email', InputArgument::OPTIONAL, 'The email of the new user')
             ->addArgument('full-name', InputArgument::OPTIONAL, 'The full name of the new user')
             ->addOption('admin', null, InputOption::VALUE_NONE, 'If set, the user is created as an administrator')
+            ->addOption('isCron', null, InputOption::VALUE_NONE, 'If set, the user is created for cron')
         ;
     }
 
@@ -177,6 +178,7 @@ class AddUserCommand extends Command
         $email = $input->getArgument('email');
         $fullName = $input->getArgument('full-name');
         $isAdmin = $input->getOption('admin');
+        $isCron = $input->getOption('isCron');
 
         // make sure to validate the user data is correct
         $this->validateUserData($username, $plainPassword, $email, $fullName);
@@ -187,6 +189,7 @@ class AddUserCommand extends Command
         $user->setUsername($username);
         $user->setEmail($email);
         $user->setRoles([$isAdmin ? 'ROLE_ADMIN' : 'ROLE_USER']);
+        $user->setIsCron($isCron);
 
         // See https://symfony.com/doc/current/book/security.html#security-encoding-password
         $encodedPassword = $this->passwordEncoder->encodePassword($user, $plainPassword);

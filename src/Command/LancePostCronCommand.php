@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\CronLog;
 use App\Entity\Post;
 use App\Entity\Tag;
+use App\Entity\User;
 use App\Entity\VideoYoutube;
 use App\Utils\Slugger;
 use Doctrine\ORM\EntityManagerInterface;
@@ -137,6 +138,10 @@ class LancePostCronCommand extends Command
             $category = $this->checkCategory();
             $post->setCategory($category);
 
+            $author = $this->checkAuthor();
+            if(null !== $author){
+                $post->setAuthor($author);
+            }
 
             $tags = explode(',', $video->getTags());
             $repositoryTags = $this->entityManager->getRepository(Tag::class);
@@ -185,6 +190,16 @@ class LancePostCronCommand extends Command
         }
 
         return $isCategory;
+    }
+
+    /**
+     * @return object|null
+     */
+    protected function checkAuthor()
+    {
+        $repositoryUser = $this->entityManager->getRepository(User::class);
+
+        return $repositoryUser->findOneBy(['isCron' => true]) ?? null;
     }
 
     /**

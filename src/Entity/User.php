@@ -69,6 +69,11 @@ class User implements UserInterface, \Serializable
      */
     private $roles = [];
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isCron;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -175,5 +180,17 @@ class User implements UserInterface, \Serializable
     {
         // add $this->salt too if you don't use Bcrypt or Argon2i
         [$this->id, $this->username, $this->password] = unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+    public function getIsCron(): ?bool
+    {
+        return $this->isCron;
+    }
+
+    public function setIsCron(?bool $isCron): self
+    {
+        $this->isCron = $isCron;
+
+        return $this;
     }
 }
