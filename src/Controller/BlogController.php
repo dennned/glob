@@ -25,6 +25,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Controller used to manage blog contents in the public part of the site.
@@ -36,6 +37,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BlogController extends AbstractController
 {
+    private $translator;
+
+    public function __construct( TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
 
     /**
      * Home Page, check routes.yaml
@@ -196,8 +204,10 @@ class BlogController extends AbstractController
      */
     private function checkCaptcha()
     {
+        $msgError = $this->translator->trans('title.comment_error');
+
         $captcha = $_POST['g-recaptcha-response'] ?? false;
-        $error = ['error' => 'Ваш комментарий - спам!'];
+        $error = ['error' => $msgError];
 
         if (!$captcha) {
             return $error;
