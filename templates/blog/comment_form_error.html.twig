@@ -14,3 +14,10 @@
         {{ include('blog/_comment_form.html.twig') }}
     </div>
 {% endblock %}
+
+{% block sidebar %}
+    {{ render(controller('App\\Controller\\CategoryController::showCategories')) }}
+    {{ render(controller('App\\Controller\\TagController::showTagsCloud')) }}
+    {{ include('blog/_rss.html.twig') }}
+{% endblock %}
+
