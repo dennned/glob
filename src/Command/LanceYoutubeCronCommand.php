@@ -130,7 +130,10 @@ class LanceYoutubeCronCommand extends Command
                 return;
             }
 
-            $params['pageToken'] = $latestLog->getNextPage();
+            // TODO parse only frech videos without pagging
+            /*if('not-nextPageToken' !== $latestLog->getNextPage()) {
+                $params['pageToken'] = $latestLog->getNextPage();
+            }*/
         }
 
         try{
@@ -197,18 +200,23 @@ class LanceYoutubeCronCommand extends Command
      */
     protected function saveVideos(array $items = [])
     {
+        $repositoryVideo = $this->entityManager->getRepository(VideoYoutube::class);
+
         foreach ($items as $item){
-
-            $video = new VideoYoutube();
-            $video
-                ->setName(strval($item['snippet']['title']))
-                ->setDescription(strval($item['snippet']['description']))
-                ->setVideoId(strval($item['id']['videoId']))
-                ->setIsPosted(false);
-
             try{
-                $this->entityManager->persist($video);
-                $this->entityManager->flush();
+                $videoExist = $repositoryVideo->findOneBy(['video_id' => $item['id']['videoId']]);
+
+                if($item['id']['videoId'] && null === $videoExist){
+                    $video = new VideoYoutube();
+                    $video
+                        ->setName(strval($item['snippet']['title']))
+                        ->setDescription(strval($item['snippet']['description']))
+                        ->setVideoId(strval($item['id']['videoId']))
+                        ->setIsPosted(false);
+
+                    $this->entityManager->persist($video);
+                    $this->entityManager->flush();
+                }
             } catch (\Exception $e){
                 $this->saveErrorLog('cron-youtube-log-ERROR : saveVideos - '.$e->getMessage());
             }
