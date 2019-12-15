@@ -78,6 +78,8 @@ class LancePostCronCommand extends Command
         // apply a consistent look to the commands of your application.
         // See https://symfony.com/doc/current/console/style.html
         $this->io = new SymfonyStyle($input, $output);
+
+        $this->io->note('cron:youtube-post-start is beginning!');
     }
 
     /**
