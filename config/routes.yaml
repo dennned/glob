@@ -18,3 +18,12 @@ homepage:
     defaults:
         template: blog/index.html.twig
         _locale: '%locale%'
+
+sitemap:
+    path: /sitemap.xml
+    controller: App\Controller\SitemapController::sitemap
+    requirements:
+        _locale: '%app_locales%'
+    defaults:
+        template: blog/sitemap.html.twig
+        _locale: '%locale%'
