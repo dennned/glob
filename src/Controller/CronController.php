@@ -37,6 +37,8 @@ class CronController extends AbstractController
             throw new ProcessFailedException($process);
         }
 
+        $this->sendMail('cron youtube start done');
+
         return $this->render('@Twig/Exception/error404.html.twig');
     }
 
@@ -60,6 +62,8 @@ class CronController extends AbstractController
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
+
+        $this->sendMail('cron youtube tag done');
 
         return $this->render('@Twig/Exception/error404.html.twig');
     }
@@ -85,6 +89,8 @@ class CronController extends AbstractController
             throw new ProcessFailedException($process);
         }
 
+        $this->sendMail('cron youtube post done');
+
         return $this->render('@Twig/Exception/error404.html.twig');
     }
 
@@ -93,9 +99,22 @@ class CronController extends AbstractController
      * @param $password
      * @return bool
      */
-    protected function checkUser($user, $password)
+    protected function checkUser($user, $password): bool
     {
         return $user === self::USER && $password === self::PASSWORD;
+    }
+
+    /**
+     * @param string $msg
+     */
+    public function sendMail(string $msg): void
+    {
+        $to = self::MAIL_TO;
+        $subject = "DennedBlog - ".$msg;
+        $txt = $msg.' - '.date('d/m/Y H:i');
+        $headers = "From: ".self::MAIL_FROM;
+
+        mail($to,$subject,$txt,$headers);
     }
 
 }
