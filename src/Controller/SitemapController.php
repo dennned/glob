@@ -27,7 +27,11 @@ class SitemapController extends AbstractController {
         $articles = $articlesRepository->findAll();
 
         foreach ($articles as $article) {
-            $urls[] = ['loc' => $this->get('router')->generate('blog_post', ['slug' => $article->getSlug()]), 'changefreq' => 'weekly', 'priority' => '1.0'];
+            $urls[] = [
+                'loc' => $this->get('router')->generate('blog_post', ['slug' => $article->getSlug()]),
+                'changefreq' => 'weekly',
+                'priority' => '1.0'
+            ];
         }
 
         // Once our array is filled, we define the controller response
