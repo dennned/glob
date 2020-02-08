@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Post;
-use App\Entity\Tag;
+use App\Repository\TagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,18 +14,18 @@ use Symfony\Component\HttpFoundation\Response;
 class TagController extends AbstractController
 {
     /**
+     * @param TagRepository $tagsRepository
      * @return Response
      */
-    public function showTagsCloud()
+    public function showTagsCloud(TagRepository $tagsRepository)
     {
-        $repositoryTags = $this->getDoctrine()->getRepository(Tag::class);
+        $tags = $tagsRepository->findRandomTags();
 
         $post = new Post();
 
-        foreach ($repositoryTags->findAll() as $tag) {
+        foreach ($tags as $tag) {
             $post->addTag($tag);
         }
-
 
         return $this->render('blog/_post_tags.html.twig', [
             'titleBloc' => true,

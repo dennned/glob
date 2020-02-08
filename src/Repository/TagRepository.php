@@ -30,4 +30,20 @@ class TagRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Tag::class);
     }
+
+    /**
+     * @param int $limit
+     * @return mixed
+     */
+    public function findRandomTags($limit = 50)
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->orderBy('RAND()')
+            ->setMaxResults($limit);
+
+        return $qb
+            ->getQuery()
+            ->getResult();
+    }
+
 }
