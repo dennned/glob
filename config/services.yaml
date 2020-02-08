@@ -7,9 +7,14 @@ parameters:
     app.notifications.email_sender: anonymous@example.com
     image_directory: '%kernel.project_dir%/public/uploads/images'
     recaptcha_key_secret: ''
-    api_key_youtube: ''
-    id_youtube_chanel: ''
 
+
+# add random function to doctrine
+doctrine:
+    orm:
+        dql:
+            numeric_functions:
+                rand: DoctrineExtensions\Query\Mysql\Rand
 services:
     # default configuration for services in *this* file
     _defaults:

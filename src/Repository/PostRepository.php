@@ -73,19 +73,18 @@ class PostRepository extends ServiceEntityRepository
     public function findRelevantPosts($tags = null, Post $post, int $limit = 3)
     {
         $qb = $this->createQueryBuilder('p')
-            ->addSelect('t')
             ->where('p.id <> :post')
             ->setParameter('post', $post->getId())
-            ->leftJoin('p.tags', 't')
-        ;
+            ->orderBy('RAND()')
+            ->setMaxResults($limit);
 
-        if (null !== $tags) {
+        // @TODO save for future
+        /*if (null !== $tags) {
             $qb->andWhere('t.id IN(:tag)')
                 ->setParameter('tag', $tags);
-        }
+        }*/
 
         return $qb
-            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }
